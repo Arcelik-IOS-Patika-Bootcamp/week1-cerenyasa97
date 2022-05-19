@@ -33,3 +33,55 @@ var lectures : [LecturesEnum : Lecture] = [
 lectures.forEach { (key, value) in
     print("\n\(key) : \(value)\n")
 }
+
+public class Person{
+    let lectures: [LecturesEnum : Lecture]
+    let nameSurname: String
+    private var _studentClass: Int?
+    public var studentClass: Int? {
+        get {
+            return self._studentClass
+        }
+        set {
+            self._studentClass = newValue
+        }
+    }
+    
+    init(schedule: [LecturesEnum : Lecture], nameSurname: String){
+        self.lectures = schedule
+        self.nameSurname = nameSurname
+    }
+    
+    func calculateNoteAverage() -> Double {
+        let count: Int = lectures.map { (key, lecture) in
+            lecture.count
+        }.reduce(0, +)
+        let sum : Double = lectures.map { (key, lecture) in
+            lecture.studentAverage * Double(lecture.count)
+        }.reduce(0, +)
+        return count > 0 ? sum / Double(count) : 0
+    }
+    
+    func determineIsPassed() {
+        for (var lectureKey, var lecture) in lectures{
+            lecture.isPassed = lecture.studentAverage >= lecture.minAverage
+            print("\(lecture.name): \(lecture.isPassed)")
+        }
+    }
+}
+
+var ceren = Person(schedule: lectures, nameSurname: "Ceren Yaşa")
+
+ceren.studentClass = 1
+
+print("Name Surname: \(ceren.nameSurname)")
+
+if let cls = ceren.studentClass{
+    print("Class: \(cls)")
+} else {
+    print("Class not initialized")
+}
+
+print(ceren.calculateNoteAverage())
+
+ceren.determineIsPassed()
